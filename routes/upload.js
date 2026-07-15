@@ -27,6 +27,9 @@ const upload = multer({
 });
 
 router.post('/', requireAuth, upload.single('file'), async (req, res) => {
+  if (!supabase) {
+    return res.status(503).json({ error: 'Uploads are not configured yet on this server.' });
+  }
   if (!req.file) return res.status(400).json({ error: 'No file uploaded.' });
 
   const ext = path.extname(req.file.originalname).toLowerCase();
